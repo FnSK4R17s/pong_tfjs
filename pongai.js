@@ -469,7 +469,7 @@ init();
 // arrow keypress events
 window.addEventListener("keydown", function (event) {
     keysDown[event.keyCode] = true;
-    print('event.keyCode');
+    console.log('event.keyCode');
 });
 window.addEventListener("keyup", function (event) {
     delete keysDown[event.keyCode];
