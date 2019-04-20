@@ -2,8 +2,8 @@
 async function init(){
 
     //model =  await tf.loadModel('indexeddb://my-model-1');
-    //model =  await tf.loadModel('https://hkinsley.com/static/tfjsmodel/model.json');
-    model =  await tf.loadModel('tfjsmodel/model.json');
+    model =  await tf.loadModel('https://hkinsley.com/static/tfjsmodel/model.json');
+    // model =  await tf.loadModel('tfjsmodel/model.json');
     //model =  await tf.loadModel('tfjsversion/model.json');
     console.log('model loaded from storage');
     computer.ai_plays = true;
@@ -166,6 +166,59 @@ Player.prototype.render = function () {
 
 // updates player paddle position
 //Player.prototype.update = Computer.prototype.update;
+
+
+
+document.addEventListener('touchstart', handleTouchStart, false);
+document.addEventListener('touchmove', handleTouchMove, false);
+
+var xDown = null;
+var yDown = null;
+
+function getTouches(evt) {
+    return evt.touches ||             // browser API
+        evt.originalEvent.touches; // jQuery
+}
+
+function handleTouchStart(evt) {
+    const firstTouch = getTouches(evt)[0];
+    xDown = firstTouch.clientX;
+    yDown = firstTouch.clientY;
+};
+
+function handleTouchMove(evt) {
+    if (!xDown || !yDown) {
+        return;
+    }
+
+    var xUp = evt.touches[0].clientX;
+    var yUp = evt.touches[0].clientY;
+
+    var xDiff = xDown - xUp;
+    var yDiff = yDown - yUp;
+
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
+        if (xDiff > 0) {
+            console.log('left swipe');
+            Player.paddle.move(-7, 0);
+        } else if (xDiff < 0) {
+            console.log('right swipe');
+            Player.paddle.move(+7, 0);
+        } else {
+            Player.paddle.move(0, 0);
+        }
+    } else {
+        if (yDiff > 0) {
+            console.log('up swipe');
+        } else {
+            console.log('down swipe');
+        }
+    }
+    /* reset values */
+    xDown = null;
+    yDown = null;
+};
+
 
 
 Player.prototype.update = function () {
@@ -462,6 +515,7 @@ AI.prototype.predict_move = function(){
 
 // add canvas
 document.body.appendChild(canvas);
+
 
 // init whole code
 init();
