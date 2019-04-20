@@ -1,9 +1,10 @@
 // init function
+
 async function init(){
 
     //model =  await tf.loadModel('indexeddb://my-model-1');
-    //model =  await tf.loadModel('https://hkinsley.com/static/tfjsmodel/model.json');
-    model =  await tf.loadModel('tfjsmodel/model.json');
+    model =  await tf.loadModel('https://hkinsley.com/static/tfjsmodel/model.json');
+    // model =  await tf.loadModel('tfjsmodel/model.json');
     //model =  await tf.loadModel('tfjsversion/model.json');
     console.log('model loaded from storage');
     computer.ai_plays = true;
@@ -168,13 +169,83 @@ Player.prototype.render = function () {
 //Player.prototype.update = Computer.prototype.update;
 
 
+
+window.addEventListener('touchstart', handleTouchStart, false);
+window.addEventListener('touchmove', handleTouchMove, false);
+window.addEventListener('touchend', handleTouchEnd, false);
+
+var xDown = null;
+var yDown = null;
+
+function getTouches(event) {
+    return event.touches ||             // browser API
+        event.originalEvent.touches; // jQuery
+}
+
+function handleTouchStart(event) {
+    const firstTouch = getTouches(event)[0];
+    xDown = firstTouch.clientX;
+    yDown = firstTouch.clientY;
+};
+
+function handleTouchMove(event) {
+    if (!xDown || !yDown) {
+        return;
+    }
+
+    var xUp = event.touches[0].clientX;
+    var yUp = event.touches[0].clientY;
+
+    var xDiff = xDown - xUp;
+    var yDiff = yDown - yUp;
+
+    if (xDiff > 0) {
+        console.log('left swipe');
+        delete keysDown[2001];
+        keysDown[2000] = true;
+        console.log(keysDown);
+        console.log(event.touches);
+        xDown = xUp;
+        yDown = yUp;
+    } else if (xDiff < 0) {
+        console.log('right swipe');
+        delete keysDown[2000];
+        keysDown[2001] = true;
+        console.log(keysDown);
+        console.log(event.touches);
+        xDown = xUp;
+        yDown = yUp;
+    } else {
+        xDown = xUp;
+        yDown = yUp;
+        // Player.paddle.move(0, 0);
+    }
+    /* reset values */
+    xDown = xUp;
+    yDown = yUp;
+    return;
+    
+};
+
+function handleTouchEnd(event) {
+    delete keysDown[2000];
+    delete keysDown[2001];
+};
+
+
+
 Player.prototype.update = function () {
+    
     for (var key in keysDown) {
         var value = Number(key);
         if (value == 37) {
             this.paddle.move(-7, 0);
         } else if (value == 39) {
             this.paddle.move(7, 0);
+        } else if (value == 2000) {
+            this.paddle.move(-5, 0);
+        } else if (value == 2001) {
+            this.paddle.move(5, 0);
         } else {
             this.paddle.move(0, 0);
         }
@@ -463,13 +534,14 @@ AI.prototype.predict_move = function(){
 // add canvas
 document.body.appendChild(canvas);
 
+
 // init whole code
 init();
 
 // arrow keypress events
 window.addEventListener("keydown", function (event) {
     keysDown[event.keyCode] = true;
-    console.log('event.keyCode');
+    console.log(keysDown);
 });
 window.addEventListener("keyup", function (event) {
     delete keysDown[event.keyCode];
