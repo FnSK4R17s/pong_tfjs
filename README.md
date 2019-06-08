@@ -28,7 +28,7 @@ and their [tutorials](https://js.tensorflow.org/tutorials/).
 
 # Pong AI
 
-![Alt text](Pong.png?raw=true "Screenshot")
+![Alt text](Pong.png?raw=true "Pong")
 
 **History of Pong**<br>
 
@@ -37,7 +37,7 @@ and their [tutorials](https://js.tensorflow.org/tutorials/).
 ## Gallery
 A retro atari cabinet with pong running on it.<br>
 
-![Alt text](atari.jpg?raw=true "Screenshot")
+![Alt text](atari.jpg?raw=true "Atari Console")
 
 
 
